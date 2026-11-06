@@ -917,63 +917,42 @@ h1{margin:0;padding:6px;text-align:center;font-size:18px;border-bottom:1px solid
 #tbt:empty::before{content:attr(data-auto)}
 .qr{background:#fff;line-height:0}.qr img{display:block}
 .bk{flex:1;display:grid;grid-template-columns:auto 10px 1fr;column-gap:4px;align-items:baseline;line-height:1.8}.bk .ed{min-height:18px}.bk .cl{text-align:center}.bankwrap{display:flex;gap:8px;align-items:flex-start;padding:4px}.bankwrap .qr{flex:none}.nop{font-size:11px;margin-top:4px}.pv .nop{display:none}
-.sig td{height:120px;vertical-align:bottom;text-align:center;width:50%}
+.sig td{position:relative;height:130px;vertical-align:top;text-align:center;width:50%}.sgap{display:none}.siglab{position:absolute;left:6px;right:6px;bottom:6px;text-align:center;font-weight:bold}
 @media print{
-  @page{size:A4 portrait;margin:5mm}
-  html,body{
-    width:200mm!important;
-    min-width:0!important;
-    height:auto!important;
-    margin:0!important;
-    padding:0!important;
-    background:#fff!important;
-    overflow:visible!important;
-  }
-  body{font-size:8px!important}
+  @page{size:A4 portrait;margin:0}
+  html{width:210mm!important;height:auto!important;margin:0!important;padding:0!important;background:#fff!important}
+  body{width:210mm!important;height:auto!important;overflow:visible!important;margin:0!important;padding:7mm 6mm 0 6mm!important;box-sizing:border-box!important;background:#fff!important}
+  body{font-size:11px!important}
   .bar,.nop,#dash{display:none!important}
-  #invv{
-    display:block!important;
-    width:100%!important;
-    height:auto!important;
-    margin:0!important;
-    padding:0!important;
-    overflow:visible!important;
-  }
+  #invv{display:block!important}
   .pg{
-    width:200mm!important;
-    max-width:200mm!important;
-    min-width:0!important;
-    height:287mm!important;
-    min-height:0!important;
-    max-height:287mm!important;
-    margin:0!important;
-    padding:2mm!important;
+    width:198mm!important;
+    max-width:198mm!important;
+    height:280mm!important;
+    max-height:280mm!important;
+    margin:0 auto!important;
+    padding:0.8mm!important;
     border:0!important;
     box-sizing:border-box!important;
-    display:block!important;
+    display:flex!important;
+    flex-direction:column!important;
     overflow:hidden!important;
     break-inside:avoid!important;
     page-break-inside:avoid!important;
-    break-before:avoid!important;
-    page-break-before:avoid!important;
     break-after:avoid!important;
     page-break-after:avoid!important;
   }
-  .pg *{box-sizing:border-box!important}
-  .pg table{width:100%!important;margin:0!important;border-collapse:collapse!important}
-  .t td,.t th{
-    padding:1px 2px!important;
-    font-size:8px!important;
-    line-height:1.05!important;
-  }
-  h1{font-size:12px!important;padding:2px!important;margin:0 0 2px!important}
-  .sig td{height:35px!important}
-  .bankwrap{padding:1px!important;gap:2px!important}
-  .bk{line-height:1.1!important}
+  .pg table{width:100%!important}
+  .t td,.t th{padding:4px 5px!important;font-size:10.5px!important;line-height:1.25!important}
+  #rows td{height:19px!important;padding-top:1px!important;padding-bottom:1px!important}
+  h1{font-size:17px!important;padding:5px!important}
+  .bankwrap{padding:3px 6px!important;gap:8px!important}
+  .bk{line-height:1.4!important}
+  .sig{flex:1 1 auto!important;height:auto!important}
+  .sig td{height:50px!important;padding:6px 8px!important}
+  .sgap{height:30px!important}
+  .sig td{vertical-align:top!important}
   .ed{background:none!important}
-  #qr1 svg{width:65px!important;height:65px!important}
-  #qr2 svg{width:75px!important;height:75px!important}
-  img,svg{max-width:100%!important}
 }
 </style></head><body>
 
@@ -1022,7 +1001,7 @@ h1{margin:0;padding:6px;text-align:center;font-size:18px;border-bottom:1px solid
 <div><div class="qr" id="qr2"></div><div class="nop">QR type:<br><select id="qt"><option value="acc">Account details</option><option value="upi">UPI pay</option></select></div></div></div></td>
 <td style="vertical-align:top"><b>Terms &amp; Conditions:</b><div class="ed" data-k="terms">1. Goods once sold will not be taken back<br>2. Seller is not responsible for any loss or damage of goods in transit<br>3. Interest @18% P.A shall be charged for overdue amount</div></td></tr></table>
 <table class="t" style="border-top:none"><tr><td class="ed" data-k="cert"><i>Certified that the particulars given above are true and correct and the amount indicated represents the price actually charged and that there is no flow of additional consideration directly &amp; indirectly from the buyer.</i></td></tr></table>
-<table class="t sig" style="border-top:none"><tr><td><div class="ed" data-k="sigc">M/s. TITAN ENGINEERING &amp; AUTOMATION LTD</div><br><br><br><br><br>CUSTOMER SIGNATORY</td><td><div class="ed" data-k="sigj">FOR JAI MARUTHI AUTOMATION</div><br><br><br><br><br>AUTHORISED SIGNATORY</td></tr></table>
+<table class="t sig" style="border-top:none"><tr><td><div class="ed" data-k="sigc">M/s. TITAN ENGINEERING &amp; AUTOMATION LTD</div><div class="sgap"></div><div class="ed siglab" data-k="sigcl">CUSTOMER SIGNATORY</div></td><td><div class="ed" data-k="sigj">FOR JAI MARUTHI AUTOMATION</div><div class="sgap"></div><div class="ed siglab" data-k="sigjl">AUTHORISED SIGNATORY</div></td></tr></table>
 </div></div>
 
 <script>
