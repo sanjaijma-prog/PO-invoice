@@ -988,12 +988,13 @@ h1{margin:0;padding:6px;text-align:center;font-size:18px;border-bottom:1px solid
 <tr><td colspan="4" class="r b">Total Amount Before Tax</td><td></td><td></td><td></td><td class="ed r" data-k="tbt" id="tbt"></td></tr>
 <tr><td colspan="4" class="r b">OUTPUT CGST @ <span id="cl">9</span>%</td><td class="ed r" data-k="cr">9</td><td class="c">%</td><td></td><td class="r" id="cgst">0.00</td></tr>
 <tr><td colspan="4" class="r b">OUTPUT SGST @ <span id="sl">9</span>%</td><td class="ed r" data-k="sr">9</td><td class="c">%</td><td></td><td class="r" id="sgst">0.00</td></tr>
+<tr><td colspan="4" class="r b">OUTPUT IGST @ <span id="il">0</span>%</td><td class="ed r" data-k="ir">0</td><td class="c">%</td><td></td><td class="r" id="igst">0.00</td></tr>
 <tr><td colspan="4" class="r b">Less: Round off</td><td></td><td></td><td></td><td class="r" id="ro">0.00</td></tr>
 <tr><td colspan="4" class="r b">Total</td><td></td><td></td><td></td><td class="r b" id="tot">₹ 0.00</td></tr></table>
 <table class="t" style="border-top:none"><tr><td><b>Amount Chargeable (in words):-</b> <span id="words"></span></td></tr></table>
-<table class="t" style="border-top:none"><tbody><tr class="c b"><td rowspan="2">HSN/SAC</td><td rowspan="2">Total Amount</td><td rowspan="2">Taxable Value</td><td colspan="2">CGST</td><td colspan="2">SGST/UTGST</td><td rowspan="2">Total Tax Amount</td></tr>
-<tr class="c b"><td>Rate</td><td>Amount</td><td>Rate</td><td>Amount</td></tr>
-</tbody><tbody id="hsnrows"></tbody><tbody><tr class="r b"><td class="c ed" data-k="hlab" id="t0">Total</td><td id="t1"></td><td id="t2"></td><td id="t3" class="c"></td><td id="t4"></td><td id="t5" class="c"></td><td id="t6"></td><td id="t7"></td></tr></tbody></table>
+<table class="t" style="border-top:none"><tbody><tr class="c b"><td rowspan="2">HSN/SAC</td><td rowspan="2">Total Amount</td><td rowspan="2">Taxable Value</td><td colspan="2">CGST</td><td colspan="2">SGST/UTGST</td><td colspan="2">IGST</td><td rowspan="2">Total Tax Amount</td></tr>
+<tr class="c b"><td>Rate</td><td>Amount</td><td>Rate</td><td>Amount</td><td>Rate</td><td>Amount</td></tr>
+</tbody><tbody id="hsnrows"></tbody><tbody><tr class="r b"><td class="c ed" data-k="hlab" id="t0">Total</td><td id="t1"></td><td id="t2"></td><td id="t3" class="c"></td><td id="t4"></td><td id="t5" class="c"></td><td id="t6"></td><td id="t5i" class="c"></td><td id="t6i"></td><td id="t7"></td></tr></tbody></table>
 <table class="t" style="border-top:none"><tr><td><b>Tax Amount (in words):-</b> <span id="twords"></span></td></tr></table>
 <table class="t" style="border-top:none"><tr><td style="width:50%;vertical-align:top"><b class="ed" data-k="bt">BANK DETAILS:-</b>
 <div class="nop" style="margin:3px 4px">Select bank: <select id="bsel"></select> <button id="bsave" style="padding:2px 8px;font-size:11px">Save as new option</button></div>
@@ -1032,10 +1033,10 @@ $('bsave').onclick=()=>{const x={n:t('bn'),a:t('ba'),i:t('bi'),b:t('bb')};if(!x.
 function calc(){
 let sub=0,hsn='';const G={};body.querySelectorAll('tr').forEach(tr=>{const c=tr.children,a=num(c[3].textContent)*num(c[4].textContent)*(1-num(c[6].textContent)/100);tr.querySelector('.amt').textContent=a?f2(a):'0.00';sub+=a;const hh=c[2].textContent.trim();if(!hsn&&hh)hsn=hh;if(a||hh)G[hh]=(G[hh]||0)+a;});
 const tb=$('tbt');if(!tb.textContent.trim()&&tb.innerHTML)tb.innerHTML='';tb.dataset.auto=f2(sub);if(tb.textContent.trim())sub=num(tb.textContent);
-const cr=num(t('cr')),sr=num(t('sr')),cg=sub*cr/100,sg=sub*sr/100,raw=sub+cg+sg,tot=Math.round(raw);T={tot,gst:cg+sg};
-$('cl').textContent=cr;$('sl').textContent=sr;$('cgst').textContent=f2(cg);$('sgst').textContent=f2(sg);$('ro').textContent=f2(tot-raw);$('tot').textContent='₹ '+f2(tot);
-$('words').textContent=words(tot);$('twords').textContent=words(Math.round((cg+sg)*100)/100);
-if(!Object.keys(G).length)G[''] =0;$('hsnrows').innerHTML=Object.keys(G).map(h=>{const a=G[h],c1=a*cr/100,s1=a*sr/100;return `<tr class="r"><td class="c">${h.replace(/</g,'&lt;')||'-'}</td><td>${f2(a)}</td><td>${f2(a)}</td><td class="c">${cr}</td><td>${f2(c1)}</td><td class="c">${sr}</td><td>${f2(s1)}</td><td>${f2(c1+s1)}</td></tr>`}).join('');$('t1').textContent=f2(sub);$('t2').textContent=f2(sub);$('t3').textContent='';$('t4').textContent=f2(cg);$('t5').textContent='';$('t6').textContent=f2(sg);$('t7').textContent=f2(cg+sg);
+const cr=num(t('cr')),sr=num(t('sr')),ir=num(t('ir')),cg=sub*cr/100,sg=sub*sr/100,ig=sub*ir/100,raw=sub+cg+sg+ig,tot=Math.round(raw);T={tot,gst:cg+sg+ig};
+$('cl').textContent=cr;$('sl').textContent=sr;$('il').textContent=ir;$('igst').textContent=f2(ig);$('cgst').textContent=f2(cg);$('sgst').textContent=f2(sg);$('ro').textContent=f2(tot-raw);$('tot').textContent='₹ '+f2(tot);
+$('words').textContent=words(tot);$('twords').textContent=words(Math.round((cg+sg+ig)*100)/100);
+if(!Object.keys(G).length)G[''] =0;$('hsnrows').innerHTML=Object.keys(G).map(h=>{const a=G[h],c1=a*cr/100,s1=a*sr/100,i1=a*ir/100;return `<tr class="r"><td class="c">${h.replace(/</g,'&lt;')||'-'}</td><td>${f2(a)}</td><td>${f2(a)}</td><td class="c">${cr}</td><td>${f2(c1)}</td><td class="c">${sr}</td><td>${f2(s1)}</td><td class="c">${ir}</td><td>${f2(i1)}</td><td>${f2(c1+s1+i1)}</td></tr>`}).join('');$('t1').textContent=f2(sub);$('t2').textContent=f2(sub);$('t3').textContent='';$('t4').textContent=f2(cg);$('t5').textContent='';$('t6').textContent=f2(sg);$('t5i').textContent='';$('t6i').textContent=f2(ig);$('t7').textContent=f2(cg+sg+ig);
 const q1=t('qr1o')||`${t('comp')} | Invoice No: ${t('invno')||'-'} | Date: ${t('invdate')||'-'}`;$('qr1txt').textContent=q1;draw('qr1',q1);
 const q2=$('qt').value==='upi'&&t('bu')?`upi://pay?pa=${encodeURIComponent(t('bu')).replace('%40','@')}&pn=${encodeURIComponent(t('bh'))}&am=${f2(tot)}&cu=INR&tn=${encodeURIComponent('Invoice '+t('invno'))}`:
 `Pay INR ${f2(tot)} | ${t('bh')} | ${t('bn')} | A/C ${t('ba')} | IFSC ${t('bi')} | ${t('bb')}`+(t('bu')?` | UPI ${t('bu')}`:'');
