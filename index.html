@@ -962,13 +962,13 @@ h1{margin:0;padding:6px;text-align:center;font-size:18px;border-bottom:1px solid
 <div class="cards"><div class="card"><small>Total Invoices</small><b id="s1">0</b></div><div class="card"><small>Total Billed (after tax)</small><b id="s2">0.00</b></div><div class="card"><small>Total GST</small><b id="s3">0.00</b></div><div class="card"><small>This Month Billed</small><b id="s4">0.00</b></div></div>
 <div class="card" style="margin-bottom:14px"><b style="font-size:14px">Last 6 months billing</b><div class="chart" id="chart"></div></div>
 <div class="card"><b style="font-size:14px">All Invoices</b>
-<div style="overflow-x:auto;margin-top:8px"><table id="list"><thead><tr><th>Invoice No</th><th>Date</th><th>Customer</th><th>PO No</th><th class="n">Amount (INR)</th><th></th></tr></thead><tbody></tbody></table></div></div>
+<div style="overflow-x:auto;margin-top:8px"><table id="list"><thead><tr><th>Type</th><th>Invoice No</th><th>Date</th><th>Customer</th><th>PO No</th><th class="n">Amount (INR)</th><th></th></tr></thead><tbody></tbody></table></div></div>
 </div>
 
 <div id="invv" hidden>
 <div class="bar"><button id="bBack">← Dashboard</button><span id="bE"><button class="p" id="bSave">Save</button> <button id="bPrev">Preview</button></span><span id="bV"><button id="bEdit">Edit</button></span><button id="bPrint">Print / PDF</button><small id="hint" style="align-self:center">Yellow fields are editable. QR codes update automatically.</small></div>
 <div class="pg" id="inv">
-<h1>TAX INVOICE</h1>
+<h1 style="position:relative"><span id="dtitle">TAX INVOICE</span><span class="nop" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);margin:0"><select id="dtype" style="font-size:11px"><option value="TAX INVOICE">Tax Invoice</option><option value="PROFORMA INVOICE">Proforma Invoice</option></select></span></h1>
 <table class="t"><tr>
 <td class="c" style="width:67%"><div class="b ed" data-k="comp" style="font-size:16px">JAI MARUTHI AUTOMATION</div>
 <div class="ed" data-k="addr">FLAT No : 1 MAHATMA GANDHI STREET, SRIPERUMBUDUR<br>KANCHEEPURAM, TAMILNADU-602105<br>Phone: +91 7339636999, +91 8660326975<br>Email: fa.jaimaruthi@rediffmail.com, sales.jaimaruthi@rediffmail.com</div>
@@ -1044,7 +1044,7 @@ function draw(id,text){const e=$(id);if(e.dataset.t===text)return;e.dataset.t=te
 try{const big=id==='qr2',S=big?140:120,q=new QRLib(-1,big?QRErr.L:QRErr.M);q.addData(unescape(encodeURIComponent(text)));q.make();const n=q.getModuleCount(),m=3;let d='';
 for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c+m} ${r+m}h1v1h-1z`;
 e.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="${S}" height="${S}" viewBox="0 0 ${n+2*m} ${n+2*m}" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;}catch(x){e.textContent='QR text too long'}}
-document.addEventListener('input',calc);$('qt').onchange=calc;
+document.addEventListener('input',calc);$('qt').onchange=calc;$('dtype').onchange=()=>{$('dtitle').textContent=$('dtype').value;};
 
 /* ---- Customer signatory follows the Bill To company (still editable) ---- */
 const billEl=document.querySelector('#inv [data-k="bill"]'),sigEl=document.querySelector('#inv [data-k="sigc"]');
@@ -1057,11 +1057,11 @@ document.addEventListener('input',e=>{if(e.target===billEl)syncSig();else if(e.t
 let cur=null;
 function load(id){const d=(id&&read()[id])||{},v=d.v||{};
 keys.forEach(e=>{const k=e.dataset.k;e.innerHTML=k in v?clean(v[k]):(k==='invdate'?today():DEF[k]);});
-cps.forEach((c,i)=>c.checked=i===(d.cp||0));$('qt').value=d.qt||'acc';checkSigAuto();fillSel();calc();}
+cps.forEach((c,i)=>c.checked=i===(d.cp||0));$('qt').value=d.qt||'acc';$('dtype').value=d.dt||'TAX INVOICE';$('dtitle').textContent=$('dtype').value;checkSigAuto();fillSel();calc();}
 function parseDate(s){let m=String(s).match(/(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})/);if(m)return new Date(+m[3],m[2]-1,+m[1]).getTime();m=String(s).match(/(\d{4})-(\d\d)-(\d\d)/);return m?new Date(+m[1],m[2]-1,+m[3]).getTime():0;}
 function save(){calc();const db=read(),id=cur||'inv'+Date.now(),v={};keys.forEach(e=>v[e.dataset.k]=e.innerHTML);
 const cust=document.querySelector('#inv [data-k="bill"]').innerText.split('\n')[0].trim();
-db[id]={v,cp:cps.findIndex(c=>c.checked),qt:$('qt').value,m:{no:t('invno'),date:t('invdate'),dt:parseDate(t('invdate'))||Date.now(),cust,po:t('po'),total:T.tot,gst:T.gst}};
+db[id]={v,cp:cps.findIndex(c=>c.checked),qt:$('qt').value,dt:$('dtype').value,m:{type:$('dtype').value,no:t('invno'),date:t('invdate'),dt:parseDate(t('invdate'))||Date.now(),cust,po:t('po'),total:T.tot,gst:T.gst}};
 write(db);cur=id;history.replaceState(null,'','#/edit/'+id);return id;}
 function mode(edit){$('invv').className=edit?'':'pv';$('inv').className='pg'+(edit?'':' pv');
 document.querySelectorAll('#inv [data-k]').forEach(e=>edit?e.setAttribute('contenteditable','true'):e.removeAttribute('contenteditable'));
@@ -1075,7 +1075,7 @@ $('s4').textContent=inr(L.filter(x=>ym(x.dt)===ym(now)).reduce((a,x)=>a+x.total,
 const ms=[...Array(6)].map((_,i)=>{const d=new Date(now.getFullYear(),now.getMonth()-5+i,1);return{l:d.toLocaleString('en',{month:'short'}),v:L.filter(x=>ym(x.dt)===ym(d)).reduce((a,x)=>a+x.total,0)}}),mx=Math.max(1,...ms.map(m=>m.v));
 $('chart').innerHTML=ms.map(m=>`<div><small>${m.v?inr(m.v):''}</small><i style="height:${Math.round(m.v/mx*80)}px"></i>${m.l}</div>`).join('');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-document.querySelector('#list tbody').innerHTML=L.map(x=>`<tr><td>${esc(x.no)||'-'}</td><td>${esc(x.date)}</td><td>${esc(x.cust)}</td><td>${esc(x.po)}</td><td class="n">${inr(x.total)}</td><td style="white-space:nowrap"><button data-a="view" data-id="${x.id}">Preview</button> <button data-a="edit" data-id="${x.id}">Edit</button> <button class="d" data-a="del" data-id="${x.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:#777">No invoices yet. Click "+ New Invoice".</td></tr>';}
+document.querySelector('#list tbody').innerHTML=L.map(x=>`<tr><td>${x.type==='PROFORMA INVOICE'?'Proforma':'Tax'}</td><td>${esc(x.no)||'-'}</td><td>${esc(x.date)}</td><td>${esc(x.cust)}</td><td>${esc(x.po)}</td><td class="n">${inr(x.total)}</td><td style="white-space:nowrap"><button data-a="view" data-id="${x.id}">Preview</button> <button data-a="edit" data-id="${x.id}">Edit</button> <button class="d" data-a="del" data-id="${x.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="7" style="text-align:center;color:#777">No invoices yet. Click "+ New Invoice".</td></tr>';}
 document.querySelector('#list').onclick=e=>{const b=e.target.closest('button');if(!b)return;const id=b.dataset.id;
 if(b.dataset.a==='del'){if(confirm('Delete this invoice?')){const db=read();delete db[id];write(db);dash();}}else location.hash='#/'+b.dataset.a+'/'+id;};
 $('bNew').onclick=()=>location.hash='#/edit/new';$('bBack').onclick=()=>location.hash='';
